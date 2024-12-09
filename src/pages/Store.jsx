@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import { StoreItem } from "../components/StoreItem";
-import { fetchProducts } from "../database/products"; 
+import { fetchProducts } from "../database/products";
 
 export function Store() {
     const [storeItems, setStoreItems] = useState([]);
@@ -11,8 +11,14 @@ export function Store() {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const products = await fetchProducts();
-                setStoreItems(products);
+                const productsResponse = await fetchProducts();
+                if (Array.isArray(productsResponse.data)) {
+                    setStoreItems(productsResponse.data);
+                    console.log(productsResponse.data)
+                } else {
+                    console.error("Dados recebidos não são um array:", productsResponse);
+                    setError("Erro ao processar os dados recebidos.");
+                }
             } catch (err) {
                 setError("Erro ao carregar os produtos.");
             } finally {
@@ -23,6 +29,7 @@ export function Store() {
         getProducts();
     }, []);
 
+
     if (loading) return <p>Carregando...</p>;
     if (error) return <p>{error}</p>;
 
@@ -31,7 +38,7 @@ export function Store() {
             <h1>Store</h1>
             <Row md={2} xs={1} lg={3} className="g-3">
                 {storeItems.map(item => (
-                    <Col key={item.id}>
+                    <Col key={item._id}>
                         <StoreItem {...item} />
                     </Col>
                 ))}

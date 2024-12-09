@@ -16,12 +16,16 @@ export function ShoppingCart({ isOpen }: ShoppingCartProps) {
 
 	useEffect(() => {
 		const getProducts = async () => {
-			setLoading(true);
 			try {
-				const fetchedProducts = await fetchProducts(); // Buscar os produtos no backend
-				setProducts(fetchedProducts);
-			} catch (error) {
-				console.error("Erro ao buscar os produtos:", error);
+				const productsResponse = await fetchProducts();
+				if (Array.isArray(productsResponse.data)) {
+					setProducts(productsResponse.data);
+					console.log(productsResponse.data);
+				} else {
+					console.error("Dados recebidos não são um array:", productsResponse);
+				}
+			} catch (err) {
+				console.log("Erro ao carregar os produtos.");
 			} finally {
 				setLoading(false);
 			}
@@ -34,7 +38,7 @@ export function ShoppingCart({ isOpen }: ShoppingCartProps) {
 
 	// Calcular o total
 	const total = cartItems.reduce((total, cartItem) => {
-		const item = products.find((i) => i.id === cartItem.id);
+		const item = products.find((i) => i._id === cartItem.id);
 		return item ? total + item.price * cartItem.quantity : total;
 	}, 0);
 

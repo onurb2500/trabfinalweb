@@ -21,12 +21,12 @@ export function Register() {
     function onSignUp(event) {
         event.preventDefault();
         onFinish(event)
-        // navigate('/login')
+        navigate('/login')
     }
 
     async function onFinish() {
         try {
-            const response = await fetch("http://localhost:5000/register", {
+            const response = await fetch("http://localhost:5000/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

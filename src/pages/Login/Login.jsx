@@ -17,7 +17,7 @@ export function Login() {
         const data = { email, password };
 
         try {
-            const response = await fetch("http://localhost:5000/login", {
+            const response = await fetch("http://localhost:5000/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export function Login() {
             if (response.status === 200) {
                 alert("Login bem-sucedido!");
                 localStorage.setItem("token", result.token);
-                navigate("/home");
+                navigate("/store");
             } else {
                 alert(result.message);
             }
